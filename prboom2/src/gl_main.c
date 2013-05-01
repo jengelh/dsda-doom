@@ -2034,12 +2034,18 @@ static void gld_DrawSprite(GLSprite *sprite)
 
 static void gld_AddHealthBar(mobj_t* thing, GLSprite *sprite)
 {
-  if (((thing->flags & (MF_COUNTKILL | MF_CORPSE)) == MF_COUNTKILL) && (thing->health > 0))
+  bool all_shoot = dsda_ShowHealthBarsForShootables();
+  int init_color = all_shoot ? health_bar_green : health_bar_null;
+  bool show_bar  = all_shoot ?
+                   thing->flags & MF_SHOOTABLE :
+                   (thing->flags & (MF_COUNTKILL | MF_CORPSE)) == MF_COUNTKILL;
+
+  if (thing->health > 0 && show_bar)
   {
     GLHealthBar hbar;
     int health_percent = thing->health * 100 / P_MobjSpawnHealth(thing);
 
-    hbar.color = health_bar_null;
+    hbar.color = init_color;
     if (health_percent <= 50)
       hbar.color = health_bar_red;
     else if (health_percent <= 99)
@@ -2066,10 +2072,11 @@ static void gld_AddHealthBar(mobj_t* thing, GLSprite *sprite)
   }
 }
 
-static GLfloat health_bar_rgb[3][3] = {
+static GLfloat health_bar_rgb[][3] = {
   [health_bar_null]   = { 0.0f, 0.0f, 0.0f },
   [health_bar_red]    = { 1.0f, 0.0f, 0.0f },
   [health_bar_yellow] = { 1.0f, 1.0f, 0.0f },
+  [health_bar_green]  = { 0.0f, 1.0f, 0.0f },
 };
 
 static void gld_DrawHealthBars(void)

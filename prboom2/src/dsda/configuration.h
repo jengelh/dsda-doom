@@ -119,6 +119,7 @@ typedef enum {
   dsda_config_gl_render_multisampling,
   dsda_config_gl_render_fov,
   dsda_config_gl_health_bar,
+  dsda_config_gl_health_bar_shootables,
   dsda_config_gl_usevbo,
   dsda_config_gl_fade_mode,
   dsda_config_use_mouse,
